@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SEQUENCE — Self-Referential Intelligence</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;600;800&display=swap");
+
+      :root {
+        --bg: #0a0a0b;
+        --surface: #111113;
+        --border: #1e1e22;
+        --fg: #f4f4f5;
+        --muted: #71717a;
+        --accent: #c9a96e;
+        --accent-dim: #8a7348;
+        --font-serif: "Instrument Serif", Georgia, serif;
+        --font-sans: "Manrope", -apple-system, sans-serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--font-sans);
+        font-weight: 300;
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ---- NAV ---- */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 3rem;
+        background: rgba(10, 10, 11, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .logo {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        letter-spacing: 0.15em;
+        color: var(--fg);
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+      .logo:hover {
+        color: var(--accent);
+      }
+
+      nav ul {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+      }
+      nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 600;
+        transition: color 0.3s;
+        position: relative;
+      }
+      nav a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--accent);
+        transition: width 0.3s;
+      }
+      nav a:hover {
+        color: var(--fg);
+      }
+      nav a:hover::after {
+        width: 100%;
+      }
+
+      /* ---- HERO ---- */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 8rem 2rem 4rem;
+        position: relative;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(201, 169, 110, 0.06) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+
+      .hero-kicker {
+        font-size: 0.7rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 2rem;
+        font-weight: 600;
+      }
+
+      .hero h1 {
+        font-family: var(--font-serif);
+        font-size: clamp(3rem, 9vw, 7rem);
+        font-weight: 400;
+        line-height: 1.05;
+        max-width: 900px;
+        margin-bottom: 2rem;
+      }
+
+      .hero h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+
+      .hero-sub {
+        max-width: 520px;
+        color: var(--muted);
+        font-size: 1rem;
+        margin-bottom: 3rem;
+      }
+
+      .hero-cta {
+        display: inline-flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .btn {
+        padding: 0.9rem 2.2rem;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        cursor: pointer;
+        border: none;
+        font-family: var(--font-sans);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      .btn-primary:hover {
+        background: var(--fg);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(201, 169, 110, 0.2);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--fg);
+        border: 1px solid var(--border);
+      }
+      .btn-ghost:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      /* ---- SECTION ---- */
+      section {
+        padding: 7rem 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
+
+      .section-title {
+        font-family: var(--font-serif);
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        font-weight: 400;
+        margin-bottom: 1rem;
+        line-height: 1.15;
+      }
+
+      .section-desc {
+        color: var(--muted);
+        max-width: 560px;
+        margin-bottom: 3.5rem;
+        font-size: 0.95rem;
+      }
+
+      /* ---- INTERACTIVE DEMO ---- */
+      .demo-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+      }
+
+      @media (max-width: 800px) {
+        .demo-panel {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          padding: 1.5rem;
+        }
+        section {
+          padding: 5rem 1.5rem;
+        }
+        nav {
+          padding: 1rem 1.5rem;
+        }
+        nav ul {
+          gap: 1.5rem;
+        }
+      }
+
+      .demo-input-area label {
+        display: block;
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+      }
+
+      .seed-input {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .seed-input input {
+        flex: 1;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        color: var(--fg);
+        font-family: "SF Mono", "Fira Code", monospace;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+      .seed-input input:focus {
+        border-color: var(--accent);
+      }
+      .seed-input input::placeholder {
+        color: #3f3f46;
+      }
+
+      .seed-input button {
+        padding: 1rem 1.5rem;
+        background: var(--accent);
+        border: none;
+        border-radius: 10px;
+        color: var(--bg);
+        font-weight: 700;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 0.3s;
+        font-family: var(--font-sans);
+      }
+      .seed-input button:hover {
+        background: var(--fg);
+      }
+
+      .preset-row {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .preset {
+        padding: 0.5rem 1rem;
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 100px;
+        color: var(--muted);
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: "SF Mono", monospace;
+      }
+      .preset:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .output-area {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .output-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .sequence-chain {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        min-height: 80px;
+      }
+
+      .seq-term {
+        font-family: "SF Mono", "Fira Code", monospace;
+        font-size: 0.8rem;
+        padding: 0.5rem 0.85rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--fg);
+        animation: fadeSlide 0.4s ease forwards;
+        opacity: 0;
+      }
+
+      .seq-term.converged {
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: 0 0 20px rgba(201, 169, 110, 0.1);
+      }
+
+      .seq-arrow {
+        color: var(--muted);
+        font-size: 0.7rem;
+        animation: fadeSlide 0.4s ease forwards;
+        opacity: 0;
+      }
+
+      @keyframes fadeSlide {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .stats-row {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+      }
+      .stat-value {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        color: var(--accent);
+      }
+      .stat-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 0.2rem;
+      }
+
+      /* ---- PRODUCT TIERS ---- */
+      .tiers {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 800px) {
+        .tiers {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .tier {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        transition:
+          border-color 0.4s,
+          transform 0.4s;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .tier:hover {
+        border-color: var(--accent-dim);
+        transform: translateY(-4px);
+      }
+
+      .tier.featured {
+        border-color: var(--accent);
+      }
+
+      .tier.featured::before {
+        content: "MOST POPULAR";
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: var(--bg);
+        font-size: 0.55rem;
+        letter-spacing: 0.2em;
+        font-weight: 800;
+        padding: 0.35rem 1rem;
+        border-radius: 100px;
+        white-space: nowrap;
+      }
+
+      .tier-name {
+        font-family: var(--font-serif);
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .tier-price {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 0.25rem;
+        letter-spacing: -0.02em;
+      }
+      .tier-price span {
+        font-size: 0.85rem;
+        font-weight: 400;
+        color: var(--muted);
+      }
+
+      .tier-desc {
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .tier-features {
+        list-style: none;
+        margin-bottom: 2rem;
+        flex: 1;
+      }
+
+      .tier-features li {
+        font-size: 0.85rem;
+        color: var(--muted);
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .tier-features li::before {
+        content: "—";
+        color: var(--accent);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .tier .btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      /* ---- FOOTER ---- */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 4rem 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+
+      footer p {
+        color: var(--muted);
+        font-size: 0.75rem;
+      }
+
+      footer .logo {
+        font-size: 1.1rem;
+      }
+
+      /* ---- SCROLL REVEAL ---- */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+          transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="#" class="logo">SEQUENCE</a>
+      <ul>
+        <li><a href="#demo">Demo</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-kicker">Self-Referential Intelligence</div>
+      <h1>
+        Numbers that
+        <em>know</em>
+        themselves
+      </h1>
+      <p class="hero-sub">
+        A deterministic engine that summarizes its own digit distribution until
+        it reaches equilibrium. No training data. No probabilities. Pure
+        convergent mathematics.
+      </p>
+      <div class="hero-cta">
+        <a href="#demo" class="btn btn-primary">Run the Engine</a>
+        <a href="#pricing" class="btn btn-ghost">View Access Tiers</a>
+      </div>
+    </header>
+
+    <section id="demo" class="reveal">
+      <div class="section-label">Interactive Engine</div>
+      <h2 class="section-title">Feed it a seed. Watch it stabilize.</h2>
+      <p class="section-desc">
+        Each term summarizes the digit frequencies of the previous term, sorted
+        descending. The sequence converges when a term repeats. Try the presets
+        or enter your own.
+      </p>
+
+      <div class="demo-panel">
+        <div class="demo-input-area">
+          <label for="seedInput">Seed Value</label>
+          <div class="seed-input">
+            <input
+              type="text"
+              id="seedInput"
+              value="40"
+              placeholder="Enter digits..."
+              inputmode="numeric"
+              autocomplete="off"
+            />
+            <button id="runBtn">Run</button>
+          </div>
+          <label>Presets</label>
+          <div class="preset-row">
+            <button class="preset" data-seed="40">40</button>
+            <button class="preset" data-seed="132110">132110</button>
+            <button class="preset" data-seed="132211">132211</button>
+            <button class="preset" data-seed="22">22</button>
+            <button class="preset" data-seed="0">0</button>
+          </div>
+        </div>
+
+        <div class="output-area">
+          <div class="output-label">Convergence Chain</div>
+          <div class="sequence-chain" id="chain"></div>
+          <div class="stats-row" id="stats" style="display: none">
+            <div class="stat">
+              <span class="stat-value" id="statTerms">—</span>
+              <span class="stat-label">Terms</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="statStable">—</span>
+              <span class="stat-label">Stable Value</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="reveal">
+      <div class="section-label">Access Tiers</div>
+      <h2 class="section-title">Choose your convergence depth</h2>
+      <p class="section-desc">
+        The engine is deterministic. Your access to its outputs is not.
+      </p>
+
+      <div class="tiers">
+        <div class="tier">
+          <div class="tier-name">Seed</div>
+          <div class="tier-price">
+            $0
+            <span>/ forever</span>
+          </div>
+          <p class="tier-desc">
+            For the curious. Run sequences up to 10 terms. No account required.
+          </p>
+          <ul class="tier-features">
+            <li>10-term convergence limit</li>
+            <li>Standard seed input</li>
+            <li>Local browser execution only</li>
+            <li>No history</li>
+          </ul>
+          <button class="btn btn-ghost">Current Plan</button>
+        </div>
+
+        <div class="tier featured">
+          <div class="tier-name">Converge</div>
+          <div class="tier-price">
+            $19
+            <span>/ month</span>
+          </div>
+          <p class="tier-desc">
+            For analysts and researchers who need full visibility into the
+            stabilization process.
+          </p>
+          <ul class="tier-features">
+            <li>Unlimited term length</li>
+            <li>Batch seed processing (CSV upload)</li>
+            <li>Export chains as JSON / CSV</li>
+            <li>Cycle detection reports</li>
+            <li>Priority support</li>
+          </ul>
+          <button class="btn btn-primary">Start Converging</button>
+        </div>
+
+        <div class="tier">
+          <div class="tier-name">Equilibrium</div>
+          <div class="tier-price">
+            $149
+            <span>/ month</span>
+          </div>
+          <p class="tier-desc">
+            For teams embedding the engine into production pipelines and
+            automated decision systems.
+          </p>
+          <ul class="tier-features">
+            <li>REST API access</li>
+            <li>99.9% uptime SLA</li>
+            <li>Custom seed ranges</li>
+            <li>Webhook notifications on convergence</li>
+            <li>Dedicated integration engineer</li>
+          </ul>
+          <button class="btn btn-ghost">Talk to Sales</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="reveal">
+      <div class="section-label">Methodology</div>
+      <h2 class="section-title">No model. No weights. Just counting.</h2>
+      <p class="section-desc" style="max-width: 700px">
+        The self-referential sequence implemented here belongs to the
+        Look-and-say family, specifically the "summarize" variant described in
+        the Rosetta Code task. Given a seed, each iteration counts the
+        occurrences of each digit present, then concatenates the count and digit
+        pairs sorted from largest digit to smallest. Digits absent from the
+        previous term are excluded. The sequence terminates when a previously
+        seen term reappears—either as a fixed point or a short cycle
+        [citation:2][citation:8]. This is deterministic computation, not
+        inference. The same seed always produces the same chain, in any
+        language, on any machine.
+      </p>
+    </section>
+
+    <footer>
+      <a href="#" class="logo">SEQUENCE</a>
+      <p>Deterministic by design. No probabilities were harmed.</p>
+    </footer>
+
+    <script>
+      (function () {
+        "use strict";
+
+        // ---- CORE ALGORITHM ----
+        function selfReferential(seed) {
+          var seen = {};
+          var chain = [];
+          var current = String(seed);
+
+          while (!seen.hasOwnProperty(current)) {
+            seen[current] = true;
+            chain.push(current);
+
+            var counts = {};
+            for (var i = 0; i < current.length; i++) {
+              var ch = current[i];
+              counts[ch] = (counts[ch] || 0) + 1;
+            }
+
+            var digits = Object.keys(counts).sort(function (a, b) {
+              return Number(b) - Number(a);
+            });
+
+            var next = "";
+            for (var j = 0; j < digits.length; j++) {
+              var d = digits[j];
+              next += String(counts[d]) + d;
+            }
+
+            current = next;
+          }
+
+          return chain;
+        }
+
+        // ---- UI WIRING ----
+        var seedInput = document.getElementById("seedInput");
+        var runBtn = document.getElementById("runBtn");
+        var chainEl = document.getElementById("chain");
+        var statsEl = document.getElementById("stats");
+        var statTerms = document.getElementById("statTerms");
+        var statStable = document.getElementById("statStable");
+
+        function renderChain(chain) {
+          chainEl.innerHTML = "";
+          statsEl.style.display = "none";
+
+          if (!chain || chain.length === 0) return;
+
+          var delay = 0;
+          chain.forEach(function (term, idx) {
+            var isLast = idx === chain.length - 1;
+            var isConverged = isLast && chain.length > 1;
+
+            var termEl = document.createElement("span");
+            termEl.className = "seq-term" + (isConverged ? " converged" : "");
+            termEl.textContent = term;
+            termEl.style.animationDelay = delay + "ms";
+            chainEl.appendChild(termEl);
+
+            if (!isLast) {
+              var arrow = document.createElement("span");
+              arrow.className = "seq-arrow";
+              arrow.textContent = "→";
+              arrow.style.animationDelay = delay + 80 + "ms";
+              chainEl.appendChild(arrow);
+            }
+
+            delay += 120;
+          });
+
+          setTimeout(function () {
+            statTerms.textContent = String(chain.length);
+            statStable.textContent = chain[chain.length - 1];
+            statsEl.style.display = "flex";
+          }, delay + 100);
+        }
+
+        function execute() {
+          var raw = seedInput.value.trim();
+          if (raw === "") {
+            seedInput.focus();
+            return;
+          }
+          if (!/^\d+$/.test(raw)) {
+            seedInput.style.borderColor = "#e74c3c";
+            setTimeout(function () {
+              seedInput.style.borderColor = "";
+            }, 800);
+            return;
+          }
+
+          runBtn.textContent = "...";
+          runBtn.disabled = true;
+
+          setTimeout(function () {
+            try {
+              var result = selfReferential(raw);
+              renderChain(result);
+            } catch (e) {
+              console.error("Sequence generation failed:", e);
+            } finally {
+              runBtn.textContent = "Run";
+              runBtn.disabled = false;
+            }
+          }, 150);
+        }
+
+        runBtn.addEventListener("click", execute);
+        seedInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") execute();
+        });
+
+        document.querySelectorAll(".preset").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            seedInput.value = this.getAttribute("data-seed");
+            execute();
+          });
+        });
+
+        // ---- SCROLL REVEAL ----
+        var reveals = document.querySelectorAll(".reveal");
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+        );
+
+        reveals.forEach(function (el) {
+          observer.observe(el);
+        });
+
+        // ---- INITIAL RUN ----
+        window.addEventListener("load", function () {
+          setTimeout(execute, 400);
+        });
+      })();
+    </script>
+  </body>
+</html>
